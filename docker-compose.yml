@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  mongo-service:
+    image: mongo:4.4.4-bionic
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=zero
+      - MONGO_INITDB_ROOT_PASSWORD=zero0000
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongo-db:/data/db
+  tm-flask-app:
+    image: tm-flask
+    build: .
+    ports:
+      - '5001:5000'
+    restart: always
+    volumes:
+      - app-vol:/root
+      - type: bind
+        source: './tm'
+        target: '/home/tm'
+    depends_on:
+      - mongo-service
+volumes:
+  mongo-db:
+  app-vol:
