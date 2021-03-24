@@ -25,6 +25,10 @@ from tm.containers.auth import (
     TokenUserService
 )
 from dependency_injector.wiring import inject, Provide
+from tm.auth.models import (
+    BlacklistedToken
+)
+from datetime import datetime
 
 auth_blp = Blueprint(
     'auth', 'auth', url_prefix='/auth',
@@ -63,7 +67,7 @@ class Login(MethodView):
         }
 
     @auth_blp.response(status_code=200, schema=AuthLogoutRespSchema)
-    @auth_blp.doc(security=[{"Oauth2PasswordBearer": []}])
+    @auth_blp.doc(security=[{"OAuth2PasswordBearer": []}])
     @inject
     def delete(
         self,
@@ -72,4 +76,17 @@ class Login(MethodView):
         """
         DELETE to logout
         """
-        raise Exception(token_user_service.get_token())
+        # * check user exists
+        token_user_service.get_token_user()
+
+        decoded_token = token_user_service.get_decoded_token()
+
+        new_blacklisted_token = BlacklistedToken(
+            id=decoded_token["blacklist_id"],
+            created_at=str(datetime.utcnow())
+        )
+        new_blacklisted_token.save()
+
+        return {
+            "logged_out": True
+        }

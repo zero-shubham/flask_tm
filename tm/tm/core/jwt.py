@@ -17,3 +17,13 @@ def create_access_token(*, data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire, "sub": access_token_jwt_subject})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return (encoded_jwt, expire)
+
+
+def decode_access_token(token: str) -> dict:
+    decoded_token = jwt.decode(
+        jwt=token,
+        key=SECRET_KEY,
+        verify=True,
+        algorithms=ALGORITHM
+    )
+    return decoded_token

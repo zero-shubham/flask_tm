@@ -19,11 +19,6 @@ MONGO_PASSWORD = os.environ["MONGO_PASSWORD"]
 
 
 def create_app(config_filename):
-    # dependency injection containers
-    token_user_container = auth.TokenUserContainer()
-    token_user_container.wire(packages=[tm])
-
-    app = Flask(__name__)
     conn = connect(
         'tm',
         host=MONGO_HOST,
@@ -31,6 +26,13 @@ def create_app(config_filename):
         username=MONGO_USERNAME,
         password=MONGO_PASSWORD
     )
+
+    # dependency injection containers
+    token_user_container = auth.TokenUserContainer()
+    token_user_container.wire(packages=[tm])
+
+    app = Flask(__name__)
+
     app.db = conn
 
     app.config['API_TITLE'] = 'Tuition Management API'
