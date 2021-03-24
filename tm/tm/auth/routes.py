@@ -11,16 +11,16 @@ from tm.auth.schemas import (
     AuthLoginRespSchema,
     AuthLogoutRespSchema
 )
-from tm.core.security import (
+from tm.utils.core.security import (
     verify_password
 )
-from tm.core.jwt import (
+from tm.utils.core.jwt import (
     create_access_token
 )
 from uuid import (
     uuid4
 )
-from tm.containers.auth import (
+from tm.utils.containers.auth import (
     TokenUserContainer,
     TokenUserService
 )

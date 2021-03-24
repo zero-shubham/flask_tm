@@ -6,7 +6,7 @@ from flask import (
     request,
     current_app
 )
-from tm.core.jwt import (
+from tm.utils.core.jwt import (
     decode_access_token
 )
 from tm.users.models import (

@@ -8,7 +8,7 @@ from tm.users.models import (
 from tm.users.schemas import (
     UserSchema
 )
-from tm.core.security import (
+from tm.utils.core.security import (
     get_password_hash
 )
 from uuid import (

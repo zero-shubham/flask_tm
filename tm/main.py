@@ -1,5 +1,5 @@
 import tm
-from tm.containers import (
+from tm.utils.containers import (
     auth
 )
 from flask import Flask

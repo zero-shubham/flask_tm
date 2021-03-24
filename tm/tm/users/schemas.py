@@ -4,7 +4,7 @@ from marshmallow import (
     validate,
     pre_load
 )
-from tm.core.security import (
+from tm.utils.core.security import (
     get_password_hash
 )
 import pytz
