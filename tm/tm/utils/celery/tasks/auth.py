@@ -21,17 +21,17 @@ def remove_outdated_blacklisted_token():
 
     now = datetime.utcnow()
     past_7_hrs = now-timedelta(hours=7)
-    past_30_days = now-timedelta(days=30)
+    past_1_day = now-timedelta(days=1)
 
     tokens = BlacklistedToken.get_blacklisted_token_by_max_min_created_at(
         past_7_hrs,
-        past_30_days
+        past_1_day
     )
     now = datetime.utcnow()
 
     for token in tokens:
-        token_to_wxp = token.created_at+timedelta(hours=6)
-        if now >= token_to_wxp:
+        token_to_exp = token.created_at+timedelta(hours=6)
+        if now >= token_to_exp:
             BlacklistedToken.delete_blacklisted_token_by_id(
                 token.id
             )
