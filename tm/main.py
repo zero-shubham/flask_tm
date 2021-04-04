@@ -11,14 +11,24 @@ from manage import (
     create_super_admin
 )
 import sys
+from celery import Celery
+from dotenv import (
+    load_dotenv
+)
+
+load_dotenv(dotenv_path=".flaskenv")
 
 MONGO_HOST = os.environ["MONGO_HOST"]
 MONGO_PORT = int(os.environ["MONGO_PORT"])
 MONGO_USERNAME = os.environ["MONGO_USERNAME"]
 MONGO_PASSWORD = os.environ["MONGO_PASSWORD"]
+REDIS_BROKER_URL = os.environ["REDIS_BROKER_URL"]
+
+celery = Celery(__name__, broker=REDIS_BROKER_URL)
 
 
 def create_app(config_filename):
+
     conn = connect(
         'tm',
         host=MONGO_HOST,
@@ -60,6 +70,11 @@ def create_app(config_filename):
                 }
         }
     }
+    app.config['CELERY_BROKER_URL'] = REDIS_BROKER_URL
+    app.config['MONGODB_CONNECT'] = False
+
+    celery.conf.update(app.config)
+
     # * cli commands
     app.cli.add_command(create_super_admin)
 

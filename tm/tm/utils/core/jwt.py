@@ -2,7 +2,11 @@ from datetime import datetime, timedelta
 import pytz
 import jwt
 import os
+from dotenv import (
+    load_dotenv
+)
 
+load_dotenv(dotenv_path=".flaskenv")
 SECRET_KEY = os.environ["SECRET_KEY"]
 ALGORITHM = "HS256"
 access_token_jwt_subject = "access"

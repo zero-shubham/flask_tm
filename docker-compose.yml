@@ -10,9 +10,46 @@ services:
       - '27018:27017'
     volumes:
       - mongo-db:/data/db
+  redis-service:
+    image: redis:6.2.1-alpine
+    ports:
+      - '6377:6379'
+
+  tm-worker-app:
+    image: tm-celery-worker
+    build:
+      context: ./
+      dockerfile: ./worker/Dockerfile
+    restart: always
+    volumes:
+      - worker-vol:/root
+      - type: bind
+        source: './tm'
+        target: '/home/tm'
+    depends_on:
+      - mongo-service
+      - redis-service
+
+  tm-scheduler-app:
+    image: tm-celery-scheduler
+    build:
+      context: ./
+      dockerfile: ./scheduler/Dockerfile
+    restart: always
+    volumes:
+      - scheduler-vol:/root
+      - type: bind
+        source: './tm'
+        target: '/home/tm'
+    depends_on:
+      - mongo-service
+      - redis-service
+
   tm-flask-app:
     image: tm-flask
-    build: .
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
     ports:
       - '5001:5000'
     restart: always
@@ -23,6 +60,9 @@ services:
         target: '/home/tm'
     depends_on:
       - mongo-service
+      - redis-service
 volumes:
   mongo-db:
   app-vol:
+  worker-vol:
+  scheduler-vol:
